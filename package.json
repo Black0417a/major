@@ -1,0 +1,15 @@
+{
+  "name": "majorti",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MajorTI - anonymous interest assessment and undergraduate major recommendation system for gaokao students.",
+  "type": "module",
+  "scripts": {
+    "seed": "node scripts/seed-majors.js",
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
