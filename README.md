@@ -30,4 +30,4 @@ npm start
 
 - 前端不使用 `localStorage`、`sessionStorage` 或 Cookie 保存答案。
 - 后端不保存 session、答案快照或测评结果。
-- `/api/assessment/submit` 只在单次请求内计算推荐结果并立即返回。
+- `/major/api/assessment/submit` 只在单次请求内计算推荐结果并立即返回。

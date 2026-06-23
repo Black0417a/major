@@ -190,7 +190,7 @@ function questionCard(item) {
 }
 
 async function submitSurvey() {
-  const result = await api("/api/assessment/submit", { method: "POST", body: { answers: state.answers, questions, profile: state.profile } });
+  const result = await api("/major/api/assessment/submit", { method: "POST", body: { answers: state.answers, questions, profile: state.profile } });
   state.result = result;
   state.view = "results";
   render();
@@ -248,7 +248,7 @@ async function loadMajors() {
   const qText = document.querySelector("[data-filter=q]")?.value || "";
   const category = document.querySelector("[data-filter=category]")?.value || "";
   const interest = document.querySelector("[data-filter=interest]")?.value || "";
-  const data = await api(`/api/majors?q=${encodeURIComponent(qText)}&category=${encodeURIComponent(category)}&interest=${encodeURIComponent(interest)}`);
+  const data = await api(`/major/api/majors?q=${encodeURIComponent(qText)}&category=${encodeURIComponent(category)}&interest=${encodeURIComponent(interest)}`);
   state.majors = data.rows;
   render();
 }
@@ -284,12 +284,12 @@ function compareBar() {
 }
 
 async function detail(id) {
-  state.detail = await api(`/api/majors/${id}`);
+  state.detail = await api(`/major/api/majors/${id}`);
   render();
 }
 
 async function compareModal() {
-  const data = await api("/api/majors/compare", { method: "POST", body: { ids: state.compare } });
+  const data = await api("/major/api/majors/compare", { method: "POST", body: { ids: state.compare } });
   state.detail = { compareRows: data.rows };
   render();
 }

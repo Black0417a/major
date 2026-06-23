@@ -90,21 +90,21 @@ function topReasons(student, vector, major) {
 }
 
 async function handleApi(req, res, url) {
-  if (req.method === "GET" && url.pathname === "/api/health") return json(res, 200, { ok: true, majors: majors.length });
-  if (req.method === "POST" && url.pathname === "/api/assessment/session") {
+  if (req.method === "GET" && url.pathname === "/major/api/health") return json(res, 200, { ok: true, majors: majors.length });
+  if (req.method === "POST" && url.pathname === "/major/api/assessment/session") {
     return json(res, 200, { stateless: true, message: "MajorTI does not store assessment progress or answers." });
   }
-  if (req.method === "POST" && url.pathname === "/api/assessment/submit") {
+  if (req.method === "POST" && url.pathname === "/major/api/assessment/submit") {
     const payload = await body(req);
     const studentVector = buildVector(payload.answers || {}, payload.questions || []);
     const recommendations = recommend(studentVector, payload.profile || {});
     const result = { studentVector, recommendations, generatedAt: new Date().toISOString() };
     return json(res, 200, result);
   }
-  if (req.method === "GET" && url.pathname.startsWith("/api/result/")) {
+  if (req.method === "GET" && url.pathname.startsWith("/major/api/result/")) {
     return json(res, 410, { error: "stateless_results", message: "Results are generated on submit and are not stored on the server." });
   }
-  if (req.method === "GET" && url.pathname === "/api/majors") {
+  if (req.method === "GET" && url.pathname === "/major/api/majors") {
     const q = (url.searchParams.get("q") || "").trim();
     const category = url.searchParams.get("category") || "";
     const interest = url.searchParams.get("interest") || "";
@@ -114,12 +114,12 @@ async function handleApi(req, res, url) {
     if (interest) rows = rows.filter(m => (m.vector[interest] || 0) >= .65);
     return json(res, 200, { rows: rows.slice(0, 80), total: rows.length });
   }
-  if (req.method === "GET" && url.pathname.startsWith("/api/majors/")) {
+  if (req.method === "GET" && url.pathname.startsWith("/major/api/majors/")) {
     const id = Number(url.pathname.split("/").pop());
     const major = majors.find(m => m.id === id);
     return major ? json(res, 200, major) : json(res, 404, { error: "major_not_found" });
   }
-  if (req.method === "POST" && url.pathname === "/api/majors/compare") {
+  if (req.method === "POST" && url.pathname === "/major/api/majors/compare") {
     const payload = await body(req);
     const ids = new Set((payload.ids || []).map(Number));
     return json(res, 200, { rows: majors.filter(m => ids.has(m.id)).slice(0, 4) });
@@ -143,7 +143,7 @@ async function serveStatic(req, res, url) {
 createServer(async (req, res) => {
   try {
     const url = new URL(req.url, "http://localhost");
-    if (url.pathname.startsWith("/api/")) return await handleApi(req, res, url);
+    if (url.pathname.startsWith("/major/api/")) return await handleApi(req, res, url);
     return await serveStatic(req, res, url);
   } catch (error) {
     console.error(error);
